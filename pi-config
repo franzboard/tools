@@ -1,0 +1,64 @@
+#!/bin/bash
+# Edgar Neukirchner 2016
+#
+# Configure a fresh raspbian jessie on a mounted SD-Card
+# using a usb sd card adaptor on a Raspberry.
+# USE AT YOUR OWN RISK!
+#
+# Script configures hostname, wlan access and resizes linux
+# partition on sd card (assuming 8GB size)
+
+# Change this according to your wlan config:
+
+SSID="mynet"
+PASS="mypassword"
+SDSIZE="8G"
+
+############################################
+fdisk -l | grep sd
+echo -n "Enter device to use: "
+read device
+
+echo -n "Hostname: "
+read new_hostname
+
+read -n 1 -p "Proceed (y/n)? " answer
+if [ $answer != "y" ] ; then
+    echo "interrupted!"
+    exit 1
+fi
+
+mount $device /mnt
+base="/mnt"
+ 
+# base=$(echo /media/$USER/!(boot))
+# echo $base
+if [ ! -d $base ] ; then
+    echo "$base does not exist"
+    exit 1
+fi
+
+echo $new_hostname > $base/etc/hostname
+sed -i "s/127.0.1.1.*raspberrypi/127.0.1.1\t$new_hostname/g" $base/etc/hosts
+
+cat << EOF > $base/etc/wpa_supplicant/wpa_supplicant.conf
+country=DE
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+    ssid="$SSID"
+    psk="$PASS"
+}
+EOF
+
+echo "\nconfiguration finished"
+
+umount $device
+echo "resizing partition..."
+# device=$(mount | grep $base | cut -f1 -d" ")
+parted ${device%%[1-9]*} resizepart $(echo $device | sed "s/[a-z/]*//") $SDSIZE
+e2fsck -f $device
+resize2fs $device
+echo "Finished"
+
+
