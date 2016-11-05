@@ -10,8 +10,8 @@
 
 # Change this according to your wlan config:
 
-SSID="mynet"
-PASS="mypassword"
+SSID="raspinet"
+PASS="raspi2016"
 SDSIZE="8G"
 
 ############################################
