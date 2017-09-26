@@ -13,7 +13,7 @@ network={
 }
 ```
 ## 2. After having logged into your Raspberry, open /etc/network/interfaces
-Add the following lines for preventing wlan module sleep mode and for reconnecting 
+Add the following lines for disabling wifi module sleep mode and for reconnecting 
 after loss of signal.
 ```
 wireless-power off
