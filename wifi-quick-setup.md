@@ -12,8 +12,9 @@ network={
     psk="my-pass"
 }
 ```
-## 2. After having logged into your Raspberry, open /etc/network/interfaces and
-add the following lines:
+## 2. After having logged into your Raspberry, open /etc/network/interfaces
+Add the following lines for preventing wlan module sleep mode and for reconnecting 
+after loss of signal.
 ```
 wireless-power off
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
