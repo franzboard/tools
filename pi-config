@@ -5,15 +5,14 @@
 # using a usb sd card adaptor on a Raspberry.
 # USE AT YOUR OWN RISK!
 #
-# Script configures hostname, wlan access and resizes linux
-# partition on sd card (assuming 8GB size)
-
-# Change this according to your wlan config:
-
+# Script configures hostname, wlan access 
+#
+############################################
+# Change these lines according to your wifi config:
+#
 SSID="raspinet"
 PASS="raspi2016"
-SDSIZE="8G"
-
+#
 ############################################
 fdisk -l | grep sd
 echo -n "Enter device to use: "
@@ -28,8 +27,9 @@ if [ $answer != "y" ] ; then
     exit 1
 fi
 
-mount $device /mnt
 base="/mnt"
+mount $device $base
+
  
 # base=$(echo /media/$USER/!(boot))
 # echo $base
@@ -42,7 +42,7 @@ echo $new_hostname > $base/etc/hostname
 sed -i "s/127.0.1.1.*raspberrypi/127.0.1.1\t$new_hostname/g" $base/etc/hosts
 
 cat << EOF > $base/etc/wpa_supplicant/wpa_supplicant.conf
-country=DE
+country=AT
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 network={
@@ -51,14 +51,14 @@ network={
 }
 EOF
 
+# keep wifi from falling asleep
+cat << EOF >> $base/etc/network/interfaces 
+wireless-power off
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+EOF
+
+umount $base
 echo "\nconfiguration finished"
 
-umount $device
-echo "resizing partition..."
-# device=$(mount | grep $base | cut -f1 -d" ")
-parted ${device%%[1-9]*} resizepart $(echo $device | sed "s/[a-z/]*//") $SDSIZE
-e2fsck -f $device
-resize2fs $device
-echo "Finished"
 
 
