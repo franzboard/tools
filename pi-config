@@ -7,6 +7,7 @@
 #
 # Script configures hostname, wlan access 
 #
+# Tested on ubuntu 17.10
 ############################################
 # Change these lines according to your wifi config:
 #
@@ -14,9 +15,11 @@ SSID="raspinet"
 PASS="raspi2016"
 #
 ############################################
-fdisk -l | grep sd
-echo -n "Enter device to use: "
-read device
+# fdisk -l | grep sd
+# echo -n "Enter device to use: "
+# read device
+
+OLDUSER=$(ls /media)
 
 echo -n "Hostname: "
 read new_hostname
@@ -27,16 +30,18 @@ if [ $answer != "y" ] ; then
     exit 1
 fi
 
-base="/mnt"
-mount $device $base
+shopt -s extglob
 
- 
-# base=$(echo /media/$USER/!(boot))
-# echo $base
+base=$(ls -d /media/$OLDUSER/!(boot))
+bootbase="/media/$OLDUSER/boot"
+
+echo "$base"
 if [ ! -d $base ] ; then
     echo "$base does not exist"
     exit 1
 fi
+
+# mount $device $base
 
 echo $new_hostname > $base/etc/hostname
 sed -i "s/127.0.1.1.*raspberrypi/127.0.1.1\t$new_hostname/g" $base/etc/hosts
@@ -57,8 +62,16 @@ wireless-power off
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 EOF
 
-umount $base
-echo "\nconfiguration finished"
+# static nameserver needed in our intranet
+cat << EOF >> $base/etc/dhcpcd.conf 
+static domain_name_servers=8.8.8.8
+EOF
 
+# enable ssh server
+touch $bootbase/ssh
+
+umount $base
+umount $bootbase
+echo "configuration finished"
 
 
