@@ -19,22 +19,22 @@ PASS="raspi2016"
 # echo -n "Enter device to use: "
 # read device
 
-OLDUSER=$(ls /media)
 
 echo -n "Hostname: "
 read new_hostname
 
-shopt -s extglob
-
-base=$(ls -d /media/$OLDUSER/!(boot))
-bootbase="/media/$OLDUSER/boot"
+base=$(mount | grep media | cut -d " " -f3 | grep -v boot)
+bootbase=$(mount | grep media | cut -d " " -f3 | grep boot)
 
 if [ ! -d $base ] ; then
     echo "$base does not exist"
     exit 1
 fi
+if [ ! -d $bootbase ] ; then
+    echo "$bootbase does not exist"
+    exit 1
+fi
 
-# mount $device $base
 
 echo $new_hostname > $base/etc/hostname
 sed -i "s/127.0.1.1.*raspberrypi/127.0.1.1\t$new_hostname/g" $base/etc/hosts
