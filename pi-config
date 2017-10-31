@@ -24,18 +24,11 @@ OLDUSER=$(ls /media)
 echo -n "Hostname: "
 read new_hostname
 
-read -n 1 -p "Proceed (y/n)? " answer
-if [ $answer != "y" ] ; then
-    echo "interrupted!"
-    exit 1
-fi
-
 shopt -s extglob
 
 base=$(ls -d /media/$OLDUSER/!(boot))
 bootbase="/media/$OLDUSER/boot"
 
-echo "$base"
 if [ ! -d $base ] ; then
     echo "$base does not exist"
     exit 1
