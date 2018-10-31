@@ -1,0 +1,21 @@
+#!/bin/bash
+# Edgar Neukirchner 2018
+#
+# Reset Raspberry Pi password to default one
+# by modification of /etc/shadow
+# Tested on ubuntu 18.04
+####################################################
+
+base=$(mount | grep media | cut -d " " -f3 | grep -v boot)
+
+if [ ! -d $base ] ; then
+    echo "$base does not exist"
+    exit 1
+fi
+
+sed -i 's|pi:.*|pi:$6$oAHCmfg/$uJxKZP0oOHCaz5CzamfdyDb12tKfm9RsXP1M2MmzonMyChiudpmw2gEMHEdEefrkvnQ2O4vKdXzMUXexH3bF91:17813:0:99999:7:::|' $base/etc/shadow
+
+umount $base
+echo "Password reset finished!"
+
+

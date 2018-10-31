@@ -39,27 +39,27 @@ fi
 echo $new_hostname > $base/etc/hostname
 sed -i "s/127.0.1.1.*raspberrypi/127.0.1.1\t$new_hostname/g" $base/etc/hosts
 
-cat << EOF > $base/etc/wpa_supplicant/wpa_supplicant.conf
-country=AT
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-network={
-    ssid="$SSID"
-    psk="$PASS"
-}
-EOF
-
-# keep wifi from falling asleep
-cat << EOF >> $base/etc/network/interfaces 
-wireless-power off
-wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
-EOF
-
-# static nameserver needed in our intranet
-cat << EOF >> $base/etc/dhcpcd.conf 
-static domain_name_servers=8.8.8.8
-EOF
-
+#cat << EOF > $base/etc/wpa_supplicant/wpa_supplicant.conf
+#country=AT
+#ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+#update_config=1
+#network={
+#    ssid="$SSID"
+#    psk="$PASS"
+#}
+#EOF
+#
+## keep wifi from falling asleep
+#cat << EOF >> $base/etc/network/interfaces 
+#wireless-power off
+#wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+#EOF
+#
+## static nameserver needed in our intranet
+#cat << EOF >> $base/etc/dhcpcd.conf 
+#static domain_name_servers=8.8.8.8
+#EOF
+#
 # enable ssh server
 touch $bootbase/ssh
 
