@@ -26,12 +26,12 @@ read new_hostname
 base=$(mount | grep media | cut -d " " -f3 | grep -v boot)
 bootbase=$(mount | grep media | cut -d " " -f3 | grep boot)
 
-if [ ! -d $base ] ; then
-    echo "$base does not exist"
+if [ -z $base ] ; then
+    echo "root base does not exist"
     exit 1
 fi
-if [ ! -d $bootbase ] ; then
-    echo "$bootbase does not exist"
+if [ -z $bootbase ] ; then
+    echo "boot base does not exist"
     exit 1
 fi
 
