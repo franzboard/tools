@@ -1,0 +1,33 @@
+#!/bin/bash
+# Elektronisches Klassenbuch
+# nutzt Namensliste (ohne .local) im Verzeichnis
+# Klassenbuch im home directory
+# Output Konsole + File datum-klasse
+# needs tput
+#
+# nr@bulme.at 2018
+
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+if [ "$#" -ne 1 ]; then
+	echo "./klassenbuch <klasse>"
+	exit 1
+fi
+
+klasse=$1
+echo "ping auf hosts in Liste $klasse"
+
+cat ~/Klassenbuch/$klasse |
+(while read name; do
+	[ -z "$name" ] && continue
+	if ping $name.local -c 1 -W 1 &> /dev/null; then
+		echo "${green}$name"
+	else
+		echo "${red}$name fail "
+	fi
+done 
+echo ${reset}) |
+tee  ~/Klassenbuch/$(date "+%Y-%m-%d")-$klasse
+
+
