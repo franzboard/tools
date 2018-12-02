@@ -38,15 +38,16 @@ echo -n "Raspberry hostname: "
 read new_hostname
 
 # temporary directory for boot and root partitions on sd card
-tempdir=$(mktemp -d -p .) || (echo "Cannot create $tempdir"; exit 1)
-mkdir $tempdir/raspi-{boot,root} ||  (echo "Cannot create $tempdir boot/root"; exit 1)
+tempdir=$(mktemp -d -p .) || { echo "Cannot create $tempdir"; exit 1; }
+mkdir $tempdir/raspi-{boot,root} ||  { echo "Cannot create $tempdir boot/root"; exit 1; }
 
 # write img to sd card
+ls /dev/sda &> /dev/null || { echo "No SD card"; exit 1; }
 dd if=$IMAGE  of=/dev/sda bs=4M status=progress
 echo "sd card flashing finished!"
 
-mount /dev/sda1 $tempdir/raspi-boot || (echo "Cannot mount boot"; exit 1)
-mount /dev/sda2 $tempdir/raspi-root || (echo "Cannot mount root"; exit 1)
+mount /dev/sda1 $tempdir/raspi-boot || { echo "Cannot mount boot"; exit 1; }
+mount /dev/sda2 $tempdir/raspi-root || { echo "Cannot mount root"; exit 1; }
 
 # configure host name if given
 if [ ! -z "$new_hostname" ]; then
