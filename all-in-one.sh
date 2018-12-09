@@ -61,6 +61,8 @@ umount $tempdir/raspi-boot
 umount $tempdir/raspi-root
 
 rm -rf $tempdir
+sync
+
 echo "configuration finished!"
 echo "*** remove SD card from adaptor ***"
 
