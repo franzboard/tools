@@ -44,7 +44,7 @@ mkdir $tempdir/raspi-{boot,root} ||  { echo "Cannot create $tempdir boot/root"; 
 # write img to sd card
 ls /dev/sda &> /dev/null || { echo "No SD card"; exit 1; }
 dd if=$IMAGE  of=/dev/sda bs=4M status=progress
-sync
+# sync
 echo "sd card flashing finished!"
 
 mount /dev/sda1 $tempdir/raspi-boot || { echo "Cannot mount boot"; exit 1; }
