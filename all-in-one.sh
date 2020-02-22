@@ -8,11 +8,14 @@
 # Execute with sudo ./all-in-one.ssh
 # Use at your own risk!!!
 #
-# nr@bulme.at 2018
+# nr@bulme.at 2020
 
+# set these if you want to configure wifi
+SSID=""
+PSK=""
 
 # Modify Raspbian Download URL if needed
-URL="https://downloads.raspberrypi.org/raspbian/images/raspbian-2018-11-15/2018-11-13-raspbian-stretch.zip"
+URL="https://downloads.raspberrypi.org/raspbian_latest"
 
 if [ "$EUID" -ne 0 ]
 	then echo "Please run with sudo"
@@ -57,6 +60,21 @@ if [ ! -z "$new_hostname" ]; then
 fi
 # enable ssh server
 touch $tempdir/raspi-boot/ssh
+
+# configure wifi
+if [ ! -z "$SSID" ] && [ ! -z "$PSK" ] ; then
+echo "configure WIFI"
+cat << EOF > $tempdir/raspi-boot/wpa_supplicant.conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=AT
+
+network={
+        ssid="$SSID"
+        psk="$PSK"
+}
+EOF
+fi
 
 umount $tempdir/raspi-boot
 umount $tempdir/raspi-root
