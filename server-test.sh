@@ -5,6 +5,8 @@
 # Beta Version!
 #
 # Usage:
+# Download file, chmod 755 server-test.sh
+#
 # Each Project must be located in a separate subdirectory
 #
 # Scenario 1: Test multiple project subdirectories
