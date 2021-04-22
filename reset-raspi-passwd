@@ -3,7 +3,7 @@
 #
 # Reset Raspberry Pi password to default one
 # by modification of /etc/shadow
-# Tested on ubuntu 18.04
+# Tested on Raspios 10
 ####################################################
 
 base=$(mount | grep media | cut -d " " -f3 | grep -v boot)
