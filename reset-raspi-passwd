@@ -13,7 +13,7 @@ if [ ! -d $base ] ; then
     exit 1
 fi
 
-sed -i 's|^pi:.*|pi:$6$oAHCmfg/$uJxKZP0oOHCaz5CzamfdyDb12tKfm9RsXP1M2MmzonMyChiudpmw2gEMHEdEefrkvnQ2O4vKdXzMUXexH3bF91:17813:0:99999:7:::|' $base/etc/shadow
+sudo sed -i 's|^pi:.*|pi:$6$oAHCmfg/$uJxKZP0oOHCaz5CzamfdyDb12tKfm9RsXP1M2MmzonMyChiudpmw2gEMHEdEefrkvnQ2O4vKdXzMUXexH3bF91:17813:0:99999:7:::|' $base/etc/shadow
 
 umount $base
 echo "Password reset finished!"
